@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+      "target": "es3",
+      "lib": [
+          "dom",
+          "es2017"
+      ],
+      "watch": true
+  }
+}
