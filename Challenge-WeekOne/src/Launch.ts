@@ -1,5 +1,6 @@
 import Rocket from "./Rocket";
 import Crew from "./Crew";
+
 class Launch {
     private readonly id: number;
     private readonly launchCode: string;
@@ -22,18 +23,6 @@ class Launch {
     public getSuccess(): boolean {
         return this.success;
     }
-
-    public getInfoLaunch(): string {
-        return `Launch registered with id ${this.id}, \n Launch Code: ${this.launchCode},\n date: ${this.date} and it was ${this.success ? "successful" : "failure"}`;
-    } 
-    public getId(): number {
-        return this.id;
-    }
 }
 
 export default Launch;
-/**
- *  atributes: id launchCode date success
- * 
- * 
- */
