@@ -1,5 +1,6 @@
 import express from 'express';
 import { rocketRouter } from '../routes/rocketRouter';
+import { crewmanRouter } from '../routes/crewmanRouter';
 //import cors from 'cors';
 import path from 'path';
 
@@ -10,6 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/rockets', rocketRouter);
+app.use('/crewman', crewmanRouter);
 
 app.get('/', (req, res) => {
     return res.send('Hello Yellow');

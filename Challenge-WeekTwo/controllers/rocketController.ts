@@ -52,12 +52,17 @@ const createRocket = async (req: Request, res: Response) => {
     }
 }
 
-// Refactor -> Cannoit delete inf rocket is associated with a launch
+// Refactor -> Cannot delete if rocket is associated with a launch
 const deleteRocket = async (req: Request, res: Response) => {
     const rocket = dataRockets.rockets.find((rock: { id: number; }) => rock.id === parseInt(req.params.id));
     if (!rocket)
         return res.status(400).json({ 'message': `Rocket ID ${req.body.id} not found` });
     
+    const launch = data.launch.find((lau: { rocketId: number; }) => lau.rocketId === parseInt(req.params.id) );
+    if (launch)
+        return res.status(400).json({ 'message': `Rocket ID ${req.body.id} associated com launch ID ${launch.id}` });
+
+
     const filteredArray = dataRockets.rockets.filter((rock: { id: number; }) => rock.id !== parseInt(req.params.id));
     dataRockets.setRockets([...filteredArray]);
     data.rocket = dataRockets.rockets;
