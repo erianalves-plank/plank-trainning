@@ -1,24 +1,25 @@
-import { Request, Response } from 'express';
-const url = process.env['JSON_SERVER'] + '/crewman'; 
+import { Request, Response } from "express";
+
+const url = process.env['JSON_SERVER'] + '/crew'; 
 
 
-const getCrewman = async (req: Request, res: Response) => {
+const getCrew = async (req: Request, res: Response) => {
     const response = await fetch(url + '/' + req.params.id);
     const jsonData = await response.json();
     return res.json({"data": jsonData});
 }
 
-const getAllCrewman = async (req: Request, res: Response) => {
+const getAllCrews = async (req: Request, res: Response) => {
     const response = await fetch(url);
     const jsonData = await response.json();
     return res.json(jsonData);
 }
 
-const updateCrewman = async (req: Request, res: Response) => {
-    const newCrewman = {
+const updateCrew = async (req: Request, res: Response) => {
+    const newCrew = {
         name: req.body.name,
         id: req.body.id,
-        patent: req.body.patent
+        crewCrewmanId: req.body.crewCrewmanId
     }
     try {
         const response = await fetch(url + '/' + req.params.id, {
@@ -26,31 +27,31 @@ const updateCrewman = async (req: Request, res: Response) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(newCrewman)
+            body: JSON.stringify(newCrew)
         });
         
     }
     catch (err) {
         console.log(err);
     }
-    res.status(200).send(newCrewman);
+    res.status(200).send(newCrew);
 }
 
-const deleteCrewman = async (req: Request, res: Response) => {
+const deleteCrew = async (req: Request, res: Response) => {
     const response = await fetch(url + '/' + req.params.id , {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
         },
     });
-    res.status(200).send(`Crewman ID ${req.params.id} deleted`);
+    res.status(200).send(`Crew ID ${req.params.id} deleted`);
 }
 
-const createCrewman = async (req: Request, res: Response) => {
-    const newCrewman = {
+const createCrew = async (req: Request, res: Response) => {
+    const newCrew = {
         name: req.body.name,
         id: req.body.id,
-        patent: req.body.patent
+        crewCrewmanId: req.body.crewCrewmanId
     }
     try {
         const response = await fetch(url, {
@@ -58,20 +59,16 @@ const createCrewman = async (req: Request, res: Response) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(newCrewman)
+            body: JSON.stringify(newCrew)
         });
         
     }
     catch (err) {
         console.log(err);
     }
-    res.status(200).send(newCrewman);
+    res.status(200).send(newCrew);
 }
 
 export {
-    updateCrewman,
-    createCrewman,
-    deleteCrewman,
-    getCrewman,
-    getAllCrewman
+    getCrew, getAllCrews, updateCrew, deleteCrew, createCrew
 };
