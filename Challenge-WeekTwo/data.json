@@ -106,19 +106,11 @@
     ],
     "rocket": [
         {
-            "name": "Andromeda",
-            "id": 1
-        },
-        {
             "name": "Antares",
             "id": 2
         },
         {
-            "name": "Antardicta",
-            "id": 3
-        },
-        {
-            "name": "Alaska",
+            "name": "Anhreid",
             "id": 4
         }
     ]

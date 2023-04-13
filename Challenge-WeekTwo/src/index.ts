@@ -1,4 +1,5 @@
 import express from 'express';
+import { rocketRouter } from '../routes/rocketRouter';
 //import cors from 'cors';
 import path from 'path';
 
@@ -8,7 +9,7 @@ app.use(express.urlencoded({ extended: false }));
 // built-in middleware for json
 app.use(express.json());
 
-app.use('/rockets', require('../routes/rockets'));
+app.use('/rockets', rocketRouter);
 
 app.get('/', (req, res) => {
     return res.send('Hello Yellow');

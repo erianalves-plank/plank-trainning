@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 const fsPromises = fs.promises;
 
-const data = require('../model/data.json');
+const data = require('../data.json');
 
 const dataRockets = {
     rockets: data.rocket,
@@ -52,11 +52,13 @@ const createRocket = async (req: Request, res: Response) => {
     }
 }
 
+// Refactor -> Cannoit delete inf rocket is associated with a launch
 const deleteRocket = async (req: Request, res: Response) => {
     const rocket = dataRockets.rockets.find((rock: { id: number; }) => rock.id === parseInt(req.params.id));
     if (!rocket)
         return res.status(400).json({ 'message': `Rocket ID ${req.body.id} not found` });
-    const filteredArray = dataRockets.rockets.filter((rock: { id: number; }) => rock.id !== parseInt(req.body.id));
+    
+    const filteredArray = dataRockets.rockets.filter((rock: { id: number; }) => rock.id !== parseInt(req.params.id));
     dataRockets.setRockets([...filteredArray]);
     data.rocket = dataRockets.rockets;
 
@@ -68,4 +70,25 @@ const deleteRocket = async (req: Request, res: Response) => {
     res.json(data.rocket);
 }
 
-export { getRockets, getAllRockets, createRocket, deleteRocket };
+const updateRocket = async (req: Request, res: Response) => {
+    console.log(req.body.id);
+    const rocket = dataRockets.rockets.find((rock: { id: number; body: { id: string; }; }) => rock.id === parseInt(req.body.id))
+    if (!rocket)
+        return res.status(400).json({ "message": `Rocket ID ${req.body.id} not found` });
+
+    if (req.body.name) rocket.name = req.body.name;
+
+    const filteredArray = dataRockets.rockets.filter((rock: { id: number; }) => rock.id !== parseInt(req.body.id));
+    const unsortedArray = [...filteredArray, rocket];
+    dataRockets.rockets.sort((a: { id: number; }, b: { id: number; }) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0);
+    data.rocket = dataRockets.rockets;
+
+    await fsPromises.writeFile(
+        path.join(__dirname, '..', 'model', 'data.json'),
+        JSON.stringify(data)
+    );
+
+    res.json(data.rocket);
+}
+
+export { getRockets, getAllRockets, createRocket, deleteRocket, updateRocket };
