@@ -1,74 +1,47 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
+import { CrewRepository } from '../repository/crewRepository';
+import { CrewService } from '../service/crewService';
 
-const url = process.env['JSON_SERVER'] + '/crew'; 
+const crewRepository = new CrewRepository();
+const crewService = new CrewService(crewRepository);
 
 
 const getCrew = async (req: Request, res: Response) => {
-    const response = await fetch(url + '/' + req.params.id);
-    const jsonData = await response.json();
-    return res.json({"data": jsonData});
+    return res.json(await crewService.getCrewById(parseInt(req.params.id)));
 }
 
-const getAllCrews = async (req: Request, res: Response) => {
-    const response = await fetch(url);
-    const jsonData = await response.json();
-    return res.json(jsonData);
+const getAllCrew = async (req: Request, res: Response) => {
+    return res.json(await crewService.getAllCrews());
 }
 
 const updateCrew = async (req: Request, res: Response) => {
     const newCrew = {
         name: req.body.name,
-        id: req.body.id,
         crewCrewmanId: req.body.crewCrewmanId
     }
-    try {
-        const response = await fetch(url + '/' + req.params.id, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newCrew)
-        });
-        
-    }
-    catch (err) {
-        console.log(err);
-    }
-    res.status(200).send(newCrew);
+    await crewService.updateCrew(parseInt(req.params.id), newCrew);
+    res.status(200).send(`Crew ID ${req.params.id} updated`);
+
 }
 
 const deleteCrew = async (req: Request, res: Response) => {
-    const response = await fetch(url + '/' + req.params.id , {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        },
-    });
+    await crewService.deleteCrew(parseInt(req.params.id));
     res.status(200).send(`Crew ID ${req.params.id} deleted`);
 }
 
 const createCrew = async (req: Request, res: Response) => {
     const newCrew = {
         name: req.body.name,
-        id: req.body.id,
         crewCrewmanId: req.body.crewCrewmanId
     }
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newCrew)
-        });
-        
-    }
-    catch (err) {
-        console.log(err);
-    }
+    await crewService.createCrew(newCrew);
     res.status(200).send(newCrew);
 }
 
 export {
-    getCrew, getAllCrews, updateCrew, deleteCrew, createCrew
+    updateCrew,
+    createCrew,
+    deleteCrew,
+    getCrew,
+    getAllCrew
 };

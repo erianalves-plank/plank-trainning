@@ -1,69 +1,38 @@
 import { Request, Response } from 'express';
+import { RocketRepository } from '../repository/rocketRepository';
+import { RocketService } from '../service/rocketService';
 
-const url = process.env['JSON_SERVER'] + '/rocket'; 
+const rocketRepository = new RocketRepository();
+const rocketService = new RocketService(rocketRepository);
 
 
 const getRocket = async (req: Request, res: Response) => {
-    const response = await fetch(url + '/' + req.params.id);
-    const jsonData = await response.json();
-    return res.json(jsonData);
+    return res.json(await rocketService.getRocketById(parseInt(req.params.id)));
 }
 
 const getAllRocket = async (req: Request, res: Response) => {
-    const response = await fetch(url);
-    const jsonData = await response.json();
-    return res.json(jsonData);
+    return res.json(await rocketService.getAllRockets());
 }
 
 const updateRocket = async (req: Request, res: Response) => {
     const newRocket = {
-        name: req.body.name,
-        id: req.body.id
+        name: req.body.name
     }
-    try {
-        const response = await fetch(url + '/' + req.params.id, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newRocket)
-        });
-        
-    }
-    catch (err) {
-        console.log(err);
-    }
-    res.status(200).send(newRocket);
+    await rocketService.updateRocket(parseInt(req.params.id), newRocket);
+    res.status(200).send(`Rocket ID ${req.params.id} updated`);
+
 }
 
 const deleteRocket = async (req: Request, res: Response) => {
-    const response = await fetch(url + '/' + req.params.id , {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        },
-    });
+    await rocketService.deleteRocket(parseInt(req.params.id));
     res.status(200).send(`Rocket ID ${req.params.id} deleted`);
 }
 
 const createRocket = async (req: Request, res: Response) => {
     const newRocket = {
-        name: req.body.name,
-        id: req.body.id
+        name: req.body.name
     }
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newRocket)
-        });
-        
-    }
-    catch (err) {
-        console.log(err);
-    }
+    await rocketService.createRocket(parseInt(req.params.id), newRocket);
     res.status(200).send(newRocket);
 }
 

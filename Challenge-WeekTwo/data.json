@@ -48,31 +48,6 @@
       "name": "Artemis II",
       "id": 105,
       "crewCrewmanId": 3
-    },
-    {
-      "name": "Kraskov",
-      "id": "7",
-      "crewCrewmanId": "4"
-    },
-    {
-      "name": "Romanoff",
-      "id": "20",
-      "crewCrewmanId": "4"
-    },
-    {
-      "name": "Shalashaska",
-      "id": "21",
-      "crewCrewmanId": "4"
-    },
-    {
-      "name": "Kirstaminav",
-      "id": "22",
-      "crewCrewmanId": "4"
-    },
-    {
-      "name": "Mantarraya",
-      "id": "23",
-      "crewCrewmanId": "4"
     }
   ],
   "crewCrewman": [

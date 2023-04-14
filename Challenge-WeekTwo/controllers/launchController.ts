@@ -1,76 +1,46 @@
 import { Request, Response } from 'express';
-const url = process.env['JSON_SERVER'] + '/launch'; 
+import { LaunchRepository } from '../repository/launchRepository';
+import { LaunchService } from '../service/launchService';
+
+const launchRepository = new LaunchRepository();
+const launchService = new LaunchService(launchRepository);
 
 
 const getLaunch = async (req: Request, res: Response) => {
-    const response = await fetch(url + '/' + req.params.id);
-    const jsonData = await response.json();
-    return res.json(jsonData);
+    return res.json(await launchService.getLaunchById(parseInt(req.params.id)));
 }
 
 const getAllLaunch = async (req: Request, res: Response) => {
-    const response = await fetch(url);
-    const jsonData = await response.json();
-    return res.json(jsonData);
+    return res.json(await launchService.getAllLaunchs());
 }
 
 const updateLaunch = async (req: Request, res: Response) => {
     const newLaunch = {
-        id: req.body.id,
         launchCode: req.body.launchCode,
         date: req.body.date,
         success: req.body.success,
         rocketId: req.body.rocketId,
-        crewId: req.body.crewId
+        crewId: req.body.crewId,
     }
-    try {
-        const response = await fetch(url + '/' + req.params.id, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newLaunch)
-        });
-        
-    }
-    catch (err) {
-        console.log(err);
-    }
-    res.status(200).send(newLaunch);
+    await launchService.updateLaunch(parseInt(req.params.id), newLaunch);
+    res.status(200).send(`launch ID ${req.params.id} updated`);
+
 }
 
 const deleteLaunch = async (req: Request, res: Response) => {
-    const response = await fetch(url + '/' + req.params.id , {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        },
-    });
-    res.status(200).send(`Luanch ID ${req.params.id} deleted`);
+    await launchService.deleteLaunch(parseInt(req.params.id));
+    res.status(200).send(`launch ID ${req.params.id} deleted`);
 }
 
 const createLaunch = async (req: Request, res: Response) => {
     const newLaunch = {
-        id: req.body.id,
         launchCode: req.body.launchCode,
         date: req.body.date,
         success: req.body.success,
         rocketId: req.body.rocketId,
-        crewId: req.body.crewId
+        crewId: req.body.crewId,
     }
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newLaunch)
-        });
-        
-    }
-    catch (err) {
-        console.log(err);
-    }
+    await launchService.createLaunch(newLaunch);
     res.status(200).send(newLaunch);
 }
 

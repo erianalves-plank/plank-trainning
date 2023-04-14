@@ -1,10 +1,10 @@
 import express from 'express';
-import { getCrew, getAllCrews, updateCrew, deleteCrew, createCrew } from '../controllers/crewController';
+import { getCrew, getAllCrew, updateCrew, deleteCrew, createCrew } from '../controllers/crewController';
 
 const crewRouter = express.Router();
 
 crewRouter.route('/')
-    .get(getAllCrews)
+    .get(getAllCrew)
     .post(createCrew);
 
 crewRouter.route('/:id')
