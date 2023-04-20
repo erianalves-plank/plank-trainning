@@ -1,5 +1,4 @@
 import { DataSource } from "typeorm";
-import { Rocket } from "../model/rocket";
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -8,7 +7,7 @@ const AppDataSource = new DataSource({
   username: process.env.TYPEORM_USERNAME || "postgres",
   password: process.env.TYPEORM_PASSWORD || "postgres",
   database: process.env.TYPEORM_DATABASE || "test",
-  entities: [Rocket],
+  entities: ["./model/*.ts"],
   migrations: ["./database/migrations/*.ts"],
   synchronize: true,
   logging: false,

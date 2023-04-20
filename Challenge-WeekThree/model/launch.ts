@@ -1,17 +1,26 @@
-class Launch {
-    private readonly id: number;
-    private readonly launchCode: string;
-    private date: string;
-    private success: boolean;
-    private rocket: Rocket;
-    private crew?: Array<Crew>;
+import { Column, Entity, JoinTable, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Rocket } from "./rocket";
+import { Crew } from "./crew";
+@Entity('launch')
+export class Launch {
+    @PrimaryGeneratedColumn()
+    id: number;
 
-    constructor(id: number, launchCode: string, success: boolean, rocket: Rocket) {
-        this.id = id;
-        this.launchCode = launchCode;
-        this.success = success;
-        this.date = (new Date()).toDateString();
-        this.rocket = rocket;
-        this.crew = new Array<Crew>;
-    }
+    @Column()
+    launchCode: string;
+    
+    @Column()
+    date: string;
+    
+    @Column()
+    success: boolean;
+    
+    @OneToOne(() => Rocket)
+    @JoinTable()
+    rocket: Rocket;
+     
+    @OneToOne(() => Crew)
+    @JoinTable()
+    crew?: Crew;
+
 }

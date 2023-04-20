@@ -1,16 +1,18 @@
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Crewman } from "./crewman";
+@Entity('crew')
+export class Crew {
 
-class Crew {
-    private readonly name: string;
-    private readonly id: number;
-    private crewmen: Array<Crewman>;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-    constructor(name: string, id: number) {
-        this.name = name;
-        this.id = id;
-        this.crewmen = new Array<Crewman>;
-    }
+    @Column()
+    name: string;
+
+    @ManyToMany(() => Crewman, {
+        cascade: true,
+    })
+    @JoinTable()
+    crewmen: Crewman[];
+
 }
-
-export {
-    Crew
-};

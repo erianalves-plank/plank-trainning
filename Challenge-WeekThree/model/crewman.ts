@@ -1,11 +1,14 @@
-class Crewman {
-    private readonly name: string;
-    private readonly id: number;
-    private patent: string;
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-    constructor(name: string, id: number, patent: string) {
-        this.name = name,
-        this.id = id;
-        this.patent = patent;
-    }
+@Entity('crewman')
+export class Crewman {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    name: string;
+
+    @Column()
+    patent: string;
+
 }

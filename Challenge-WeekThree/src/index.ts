@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import express from 'express';
 import AppDataSource from '../datasource/dataSource';
-import './database'
+import '../database'
 import bodyParser from 'body-parser';
 import * as dotenv from 'dotenv';
 dotenv.config()
