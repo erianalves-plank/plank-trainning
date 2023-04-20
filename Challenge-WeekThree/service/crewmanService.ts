@@ -1,28 +1,46 @@
-import { CrewmanRepository } from "../repository/crewmanRepository";
+import { Crewman } from "../model/crewman";
+import AppDataSource from "../datasource/dataSource";
+
+
+const crewmanRepository = AppDataSource.getRepository(Crewman);
 
 class CrewmanService {
 
-    private crewmanRepository: CrewmanRepository;
+    async execute({ name, patent }: Partial<Crewman>): Promise<Crewman | Error> {
+        const crewman = crewmanRepository.create({
+            name,
+            patent,
+        });
+        await crewmanRepository.save(crewman);
 
-    constructor (crewmanRepo: CrewmanRepository){
-        this.crewmanRepository = crewmanRepo;
+        return crewman;
     }
 
-    async getCrewmanById(crewmanId: number) {
-        return await this.crewmanRepository.getCrewmanById(crewmanId);
+    async getAllCrewmen() {
+        const crewmen = await crewmanRepository.find();
+        return crewmen;
     }
-    async getAllCrewmans() {
-        return await this.crewmanRepository.getCrewmans();
+
+    async delete(crewmanId: string){
+        if (!(await crewmanRepository.findOneBy({id: parseInt(crewmanId)})))
+            return new Error("Crewman not found");
+
+        await crewmanRepository.delete(crewmanId);
     }
-    async createCrewman(newCrewman: Object) {
-        return await this.crewmanRepository.createCrewman(newCrewman);
-    }    
-    async deleteCrewman(crewmanId : number) {
-        return await this.crewmanRepository.deleteCrewmanById(crewmanId);
+
+    async update({id, name, patent} : Partial<Crewman>){
+        const crewman = await crewmanRepository.findOneBy({id: id});
+        if (!crewman)
+            return new Error("Crewman not found");
+        
+        crewman.name = name;
+        crewman.patent = patent;
+
+        await crewmanRepository.save(crewman);
+
+        return crewman;
     }
-    async updateCrewman(crewmanId : number, newCrewman: Object) {
-        return await this.crewmanRepository.updateCrewmanById(crewmanId, newCrewman);
-    }
+
 }
 export {
     CrewmanService

@@ -1,6 +1,5 @@
 import express from 'express';
 import { RocketController }  from '../controllers/rocketController'; 
-import { Rocket } from '../model/rocket';
 
 const rocketRouter = express.Router();
 

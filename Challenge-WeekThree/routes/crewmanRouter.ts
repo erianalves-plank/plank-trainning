@@ -1,17 +1,16 @@
 import express from 'express';
-import { updateCrewman, createCrewman, deleteCrewman, getCrewman, getAllCrewman } from '../controllers/crewmanController';
+import { CrewmanController } from '../controllers/crewmanController';
 
 const crewmanRouter = express.Router();
 
 crewmanRouter.route('/')
-    .get(getAllCrewman)
-    .post(createCrewman);
+    .get(new CrewmanController().handleGetCrewman)
+    .post(new CrewmanController().handle);
 
 
 crewmanRouter.route('/:id')
-    .get(getCrewman)
-    .put(updateCrewman)
-    .delete(deleteCrewman);
+    .put(new CrewmanController().handleUpdateCrewman)
+    .delete(new CrewmanController().handleDeleteCrewman);
 
 export {
     crewmanRouter

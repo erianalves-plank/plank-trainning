@@ -6,7 +6,6 @@ class RocketController {
         const name = request.body.name;
 
         const service = new RocketService();
-        console.log('AJLDSFHAJLF');
         const result = await service.execute({name});
 
         if (result instanceof Error) {

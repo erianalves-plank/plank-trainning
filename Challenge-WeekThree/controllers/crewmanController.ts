@@ -1,47 +1,55 @@
 import { Request, Response } from 'express';
-import { CrewmanRepository } from '../repository/crewmanRepository';
 import { CrewmanService } from '../service/crewmanService';
 
-const crewmanRepository = new CrewmanRepository();
-const crewmanService = new CrewmanService(crewmanRepository);
+class CrewmanController {
+    async handle(request: Request, response: Response){
+        const name = request.body.name;
+        const patent = request.body.patent;
 
+        const service = new CrewmanService();
+        const result = await service.execute({name, patent});
 
-const getCrewman = async (req: Request, res: Response) => {
-    return res.json(await crewmanService.getCrewmanById(parseInt(req.params.id)));
-}
-
-const getAllCrewman = async (req: Request, res: Response) => {
-    return res.json(await crewmanService.getAllCrewmans());
-}
-
-const updateCrewman = async (req: Request, res: Response) => {
-    const newCrewman = {
-        name: req.body.name,
-        patent: req.body.patent
+        if (result instanceof Error) {
+            return response.status(400).json(result.message);
+        }
+        return response.json(result);
     }
-    await crewmanService.updateCrewman(parseInt(req.params.id), newCrewman);
-    res.status(200).send(`Crewman ID ${req.params.id} updated`);
 
-}
+    async handleGetCrewman(request: Request, response: Response){
+        const service = new CrewmanService();
+        const crewmen = await service.getAllCrewmen();
 
-const deleteCrewman = async (req: Request, res: Response) => {
-    await crewmanService.deleteCrewman(parseInt(req.params.id));
-    res.status(200).send(`Crewman ID ${req.params.id} deleted`);
-}
-
-const createCrewman = async (req: Request, res: Response) => {
-    const newCrewman = {
-        name: req.body.name,
-        patent: req.body.patent
+        return response.json(crewmen);
     }
-    await crewmanService.createCrewman(newCrewman);
-    res.status(200).send(newCrewman);
+
+    async handleDeleteCrewman(request: Request, response: Response){
+        const { id } = request.params;
+
+        const service = new CrewmanService();
+        
+        const result = await service.delete(id);
+
+        if (result instanceof Error)
+            return response.status(400).json(result.message);
+    
+
+        return response.status(204).end();
+    }
+
+    async handleUpdateCrewman(request: Request, response: Response){
+        const { id } = request.params;
+        const { name, patent } = request.body;
+        const service = new CrewmanService();
+        
+        const result = await service.update({ name, patent });
+
+        if (result instanceof Error)
+            return response.status(400).json(result.message);
+    
+
+        return response.json(result);
+    }
 }
 
-export {
-    updateCrewman,
-    createCrewman,
-    deleteCrewman,
-    getCrewman,
-    getAllCrewman
-};
+
+export { CrewmanController };
