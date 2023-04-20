@@ -7,6 +7,7 @@ import * as dotenv from 'dotenv';
 dotenv.config()
 import { rocketRouter } from '../routes/rocketRouter';
 import { crewmanRouter } from '../routes/crewmanRouter';
+import { crewRouter } from '../routes/crewRouter';
 
 AppDataSource.initialize()
     .then(() => {
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 
 app.use('/rocket', rocketRouter);
 app.use('/crewman', crewmanRouter);
+app.use('/crew', crewRouter);
 
 
 app.get('/', (req, res) => {

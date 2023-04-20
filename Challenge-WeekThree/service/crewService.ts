@@ -1,27 +1,49 @@
-import { CrewRepository } from "../repository/crewRepository";
+import { Crew } from "../model/crew";
+import AppDataSource from "../datasource/dataSource";
+import { Crewman } from "../model/crewman";
+
+const crewRepository = AppDataSource.getRepository(Crew);
+const crewmanRepository = AppDataSource.getRepository(Crewman);
+
+type CrewRequest = {
+    name: string;
+    crewmen: number[];
+
+}
 
 class CrewService {
+    async execute({ name, crewmen }: CrewRequest): Promise<Crew | Error> {
+        let crewmenObj: Crewman[] = [];
+        for (const crewmanId of crewmen){
+            let crewman = (await crewmanRepository.findOneBy({id: crewmanId}));
+            crewmenObj.push(crewman);
+        }
+        const crew = new Crew();
+        crew.crewmen = crewmenObj;
+        crew.name = name;
+        /*      
+        const crew = crewRepository.create({
+            name,
+            crewmenObj, 
+        }); */
 
-    private crewRepository: CrewRepository;
+        await crewRepository.save(crew);
 
-    constructor (crewRepo: CrewRepository){
-        this.crewRepository = crewRepo;
+        return crew;
     }
 
-    async getCrewById(crewId: number) {
-        return await this.crewRepository.getCrewById(crewId);
+    async getAllCrew() {
+        const crew = await crewRepository.find({
+            relations: {
+                crewmen: true,
+            },
+        });
+        return crew;
     }
-    async getAllCrews() {
-        return await this.crewRepository.getCrews();
-    }
-    async createCrew(newCrew: Object) {
-        return await this.crewRepository.createCrew(newCrew);
-    }    
-    async deleteCrew(crewId : number) {
-        return await this.crewRepository.deleteCrewById(crewId);
-    }
-    async updateCrew(crewId : number, newCrew: Object) {
-        return await this.crewRepository.updateCrewById(crewId, newCrew);
+
+    async getCrewById(crewId: string){
+        const crew = await crewRepository.findOneBy({id: parseInt(crewId)});
+        return crew;
     }
 }
 export {
