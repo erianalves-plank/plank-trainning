@@ -22,11 +22,6 @@ class CrewService {
         const crew = new Crew();
         crew.crewmen = crewmenObj;
         crew.name = name;
-        /*      
-        const crew = crewRepository.create({
-            name,
-            crewmenObj, 
-        }); */
 
         await crewRepository.save(crew);
 
@@ -56,7 +51,6 @@ class CrewService {
 
     async update({id, name, crewmen} : CrewRequest){
         const crew = await crewRepository.findOneBy({id: id});
-        console.log("-----> " + crew);
         if (!crew)
             return new Error("Crew not found");
 

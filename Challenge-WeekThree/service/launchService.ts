@@ -16,13 +16,11 @@ type LaunchRequest = {
     crewId?: number;
 }
 
-
 class LaunchService {
     async execute({ launchCode, date, success, rocketId, crewId}: LaunchRequest): Promise<Launch | Error> {
 
         const rocket = await rocketRepository.findOneBy({ id: rocketId });
         const crew = await crewRepository.findOneBy({ id: crewId });
-
 
         const launch = launchRepository.create({
             launchCode,
@@ -66,7 +64,6 @@ class LaunchService {
 
         const rocket = await rocketRepository.findOneBy({ id: rocketId });
         const crew = await crewRepository.findOneBy({ id: crewId });
-
 
         launch.launchCode = launchCode;
         launch.date = date;

@@ -11,12 +11,7 @@ const rocketRepository = AppDataSource.getRepository(Rocket);
 class RocketService {
 
     async execute({ name }: RocketRequest): Promise<Rocket | Error> {
-        console.log("--> "+ rocketRepository);
-        
-   /*      if (await repo.findOne({name}))
-            return new Error('Rocket already exists');
 
- */
         const rocket = rocketRepository.create({
             name,
         });

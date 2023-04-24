@@ -30,7 +30,6 @@ class CrewmanService {
 
     async update({id, name, patent} : Partial<Crewman>){
         const crewman = await crewmanRepository.findOneBy({id: id});
-        console.log("-----> " + crewman);
         if (!crewman)
             return new Error("Crewman not found");
         
