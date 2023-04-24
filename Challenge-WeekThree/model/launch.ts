@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Rocket } from "./rocket";
 import { Crew } from "./crew";
 @Entity('launch')
@@ -16,11 +16,11 @@ export class Launch {
     success: boolean;
     
     @OneToOne(() => Rocket)
-    @JoinTable()
+    @JoinColumn()
     rocket: Rocket;
      
     @OneToOne(() => Crew)
-    @JoinTable()
+    @JoinColumn()
     crew?: Crew;
 
 }

@@ -14,7 +14,4 @@ export class Crew {
     })
     @JoinTable()
     crewmen: Crewman[];
-
-    
-
 }

@@ -8,6 +8,8 @@ crewRouter.route('/')
     .post(new CrewController().handle);
 
 crewRouter.route('/:id')
-    .get(new CrewController().handleGetCrewbyId);
+    .get(new CrewController().handleGetCrewbyId)
+    .delete(new CrewController().handleDeleteCrew)
+    .put(new CrewController().handleUpdateCrew);
 
 export { crewRouter };

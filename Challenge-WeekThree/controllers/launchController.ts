@@ -1,53 +1,73 @@
 import { Request, Response } from 'express';
-import { LaunchRepository } from '../repository/launchRepository';
 import { LaunchService } from '../service/launchService';
 
-const launchRepository = new LaunchRepository();
-const launchService = new LaunchService(launchRepository);
+class LaunchController {
+    async handle(request: Request, response: Response){
+        const launchCode = request.body.launchCode;
+        const date = request.body.date;
+        const success = request.body.success;
+        const rocketId = request.body.rocketId;
+        const crewId = request.body.crewId;
 
 
-const getLaunch = async (req: Request, res: Response) => {
-    return res.json(await launchService.getLaunchById(parseInt(req.params.id)));
-}
+        const service = new LaunchService();
+        const result = await service.execute({launchCode, date, success, rocketId, crewId});
 
-const getAllLaunch = async (req: Request, res: Response) => {
-    return res.json(await launchService.getAllLaunchs());
-}
-
-const updateLaunch = async (req: Request, res: Response) => {
-    const newLaunch = {
-        launchCode: req.body.launchCode,
-        date: req.body.date,
-        success: req.body.success,
-        rocketId: req.body.rocketId,
-        crewId: req.body.crewId,
+        if (result instanceof Error) {
+            return response.status(400).json(result.message);
+        }
+        return response.json(result);
     }
-    await launchService.updateLaunch(parseInt(req.params.id), newLaunch);
-    res.status(200).send(`launch ID ${req.params.id} updated`);
 
-}
+    async handleGetLaunch(request: Request, response: Response){
+        const service = new LaunchService();
+        const launch = await service.getAllLaunch();
 
-const deleteLaunch = async (req: Request, res: Response) => {
-    await launchService.deleteLaunch(parseInt(req.params.id));
-    res.status(200).send(`launch ID ${req.params.id} deleted`);
-}
-
-const createLaunch = async (req: Request, res: Response) => {
-    const newLaunch = {
-        launchCode: req.body.launchCode,
-        date: req.body.date,
-        success: req.body.success,
-        rocketId: req.body.rocketId,
-        crewId: req.body.crewId,
+        return response.json(launch);
     }
-    await launchService.createLaunch(newLaunch);
-    res.status(200).send(newLaunch);
-}
 
+    async handleGetLaunchById(request: Request, response: Response){
+        const { id } = request.params;
+
+        const service = new LaunchService();
+        const launch = await service.getLaunchById(id);
+
+        return response.json(launch);
+    }
+
+    async handleDeleteLaunch(request: Request, response: Response){
+        const { id } = request.params;
+
+        const service = new LaunchService();
+        
+        const result = await service.delete(id);
+
+        if (result instanceof Error)
+            return response.status(400).json(result.message);
+    
+
+        return response.status(204).end();
+    }
+
+    async handleUpdateLaunch(request: Request, response: Response){
+        const id = parseInt(request.params.id);
+        const launchCode = request.body.launchCode;
+        const date = request.body.date;
+        const success = request.body.success;
+        const rocketId = request.body.rocketId;
+        const crewId = request.body.crewId;
+        const service = new LaunchService();
+        
+        const result = await service.update({ id, launchCode, date, success, rocketId, crewId });
+
+        if (result instanceof Error)
+            return response.status(400).json(result.message);
+    
+
+        return response.json(result);
+    }
+ 
+}
 export {
-    updateLaunch,
-    createLaunch,
-    deleteLaunch,
-    getLaunch,
-    getAllLaunch
+    LaunchController
 };
